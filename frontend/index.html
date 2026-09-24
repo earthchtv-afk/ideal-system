@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Assignment Management</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f6fa;
+    }
+
+    header {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .assignment {
+      background: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Student Assignment Management</h1>
+  <p>ระบบจัดการการส่งงานนักเรียนออนไลน์</p>
+</header>
+
+<div class="container">
+
+  <h2>รายการงาน</h2>
+
+  <div id="assignments">
+    กำลังโหลดข้อมูล...
+  </div>
+
+</div>
+
+<script>
+  async function loadAssignments() {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/assignments"
+      );
+
+      const assignments = await response.json();
+
+      const container = document.getElementById("assignments");
+
+      container.innerHTML = "";
+
+      assignments.forEach((assignment) => {
+
+        const div = document.createElement("div");
+
+        div.className = "assignment";
+
+        div.innerHTML = `
+          <h3>${assignment.title}</h3>
+
+          <p>${assignment.description}</p>
+
+          <p>
+            <strong>กำหนดส่ง:</strong>
+            ${assignment.dueDate}
+          </p>
+
+          <p>
+            <strong>สถานะ:</strong>
+            ${assignment.status}
+          </p>
+
+          <button onclick="submitAssignment(${assignment.id})">
+            ส่งงาน
+          </button>
+        `;
+
+        container.appendChild(div);
+      });
+
+    } catch (error) {
+      document.getElementById("assignments").innerHTML =
+        "ไม่สามารถเชื่อมต่อกับ Server ได้";
+    }
+  }
+
+  function submitAssignment(id) {
+    alert("เลือกส่งงาน ID: " + id);
+  }
+
+  loadAssignments();
+</script>
+
+</body>
+</html>
